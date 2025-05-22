@@ -1,10 +1,17 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import './App.scss';
 
+import { useState } from 'react';
 import usersFromServer from './api/users';
 import categoriesFromServer from './api/categories';
 import productsFromServer from './api/products';
 import { Table } from './Table';
+import { PanelUsersName } from './PanelUsersName';
+
+const usersName = usersFromServer.map(user => ({
+  id: user.id,
+  name: user.name,
+}));
 
 const products = productsFromServer.map(product => {
   const category = categoriesFromServer.find(
@@ -16,8 +23,28 @@ const products = productsFromServer.map(product => {
   return { ...product, category, user };
 });
 
+function productsFilter(filter, { nameSelected }) {
+  let copyProductsFilter = [...filter];
+
+  if (nameSelected === 'All') {
+    return copyProductsFilter;
+  }
+
+  if (nameSelected !== null) {
+    copyProductsFilter = copyProductsFilter.filter(
+      product => product.user.name === nameSelected,
+    );
+  }
+
+  return copyProductsFilter;
+}
+
 export const App = () => {
   console.log(products);
+  // console.log(usersFromServer);
+  const [nameSelected, setNameSelected] = useState('All');
+
+  const filteredProducts = productsFilter(products, { nameSelected });
 
   return (
     <div className="section">
@@ -28,23 +55,11 @@ export const App = () => {
           <nav className="panel">
             <p className="panel-heading">Filters</p>
 
-            <p className="panel-tabs has-text-weight-bold">
-              <a data-cy="FilterAllUsers" href="#/">
-                All
-              </a>
-
-              <a data-cy="FilterUser" href="#/">
-                User 1
-              </a>
-
-              <a data-cy="FilterUser" href="#/" className="is-active">
-                User 2
-              </a>
-
-              <a data-cy="FilterUser" href="#/">
-                User 3
-              </a>
-            </p>
+            <PanelUsersName
+              usersName={usersName}
+              nameSelected={nameSelected}
+              onClickChengeName={setNameSelected}
+            />
 
             <div className="panel-block">
               <p className="control has-icons-left has-icons-right">
@@ -116,7 +131,7 @@ export const App = () => {
           </nav>
         </div>
 
-        <Table products={products} />
+        <Table products={filteredProducts} />
       </div>
     </div>
   );

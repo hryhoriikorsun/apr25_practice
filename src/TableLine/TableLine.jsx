@@ -3,7 +3,7 @@ import { SEX } from '../constants';
 
 export const TableLine = ({ product }) => {
   return (
-    <tr key={product.id} data-cy="Product">
+    <tr data-cy="Product">
       <td className="has-text-weight-bold" data-cy="ProductId">
         {product.id}
       </td>

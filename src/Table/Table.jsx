@@ -59,34 +59,8 @@ export const Table = ({ products }) => {
 
         <tbody>
           {products.map(product => {
-            return <TableLine product={product} />;
+            return <TableLine key={product.id} product={product} />;
           })}
-
-          <tr data-cy="Product">
-            <td className="has-text-weight-bold" data-cy="ProductId">
-              2
-            </td>
-
-            <td data-cy="ProductName">Bread</td>
-            <td data-cy="ProductCategory">🍞 - Grocery</td>
-
-            <td data-cy="ProductUser" className="has-text-danger">
-              Anna
-            </td>
-          </tr>
-
-          <tr data-cy="Product">
-            <td className="has-text-weight-bold" data-cy="ProductId">
-              3
-            </td>
-
-            <td data-cy="ProductName">iPhone</td>
-            <td data-cy="ProductCategory">💻 - Electronics</td>
-
-            <td data-cy="ProductUser" className="has-text-link">
-              Roma
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
