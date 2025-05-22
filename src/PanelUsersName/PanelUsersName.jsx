@@ -11,7 +11,9 @@ export const PanelUsersName = ({
         data-cy="FilterAllUsers"
         href="#/"
         className={cn({ 'is-active': nameSelected === 'All' })}
-        onClick={() => onClickChengeName('All')}
+        onClick={() => {
+          onClickChengeName('All');
+        }}
       >
         All
       </a>
@@ -23,7 +25,9 @@ export const PanelUsersName = ({
             data-cy="FilterUser"
             href="#/"
             className={cn({ 'is-active': nameSelected === user.name })}
-            onClick={() => onClickChengeName(user.name)}
+            onClick={() => {
+              onClickChengeName(user.name);
+            }}
           >
             {user.name}
           </a>

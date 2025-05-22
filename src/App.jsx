@@ -7,6 +7,7 @@ import categoriesFromServer from './api/categories';
 import productsFromServer from './api/products';
 import { Table } from './Table';
 import { PanelUsersName } from './PanelUsersName';
+import { Serch } from './Serch/Serch';
 
 const usersName = usersFromServer.map(user => ({
   id: user.id,
@@ -16,35 +17,45 @@ const usersName = usersFromServer.map(user => ({
 const products = productsFromServer.map(product => {
   const category = categoriesFromServer.find(
     oneCategory => oneCategory.id === product.categoryId,
-  ); // find by product.categoryId
+  );
 
-  const user = usersFromServer.find(oneUser => oneUser.id === category.ownerId); // find by category.ownerId
+  const user = usersFromServer.find(oneUser => oneUser.id === category.ownerId);
 
   return { ...product, category, user };
 });
 
-function productsFilter(filter, { nameSelected }) {
-  let copyProductsFilter = [...filter];
+function productsFilter(elements, filter) {
+  let copyProductsFilter = [...elements];
 
-  if (nameSelected === 'All') {
+  if (filter.nameSelected === 'All') {
     return copyProductsFilter;
   }
 
-  if (nameSelected !== null) {
+  if (filter.nameSelected !== null) {
     copyProductsFilter = copyProductsFilter.filter(
-      product => product.user.name === nameSelected,
+      product => product.user.name === filter.nameSelected,
     );
+  }
+
+  if (filter.querySerch !== '') {
+    const clearQuerySerch = filter.querySerch.trim().toLowerCase();
+
+    copyProductsFilter = copyProductsFilter.filter(product => {
+      return product.name.toLowerCase().includes(clearQuerySerch);
+    });
   }
 
   return copyProductsFilter;
 }
 
 export const App = () => {
-  console.log(products);
-  // console.log(usersFromServer);
   const [nameSelected, setNameSelected] = useState('All');
+  const [querySerch, setQuerySerch] = useState('');
 
-  const filteredProducts = productsFilter(products, { nameSelected });
+  const filteredProducts = productsFilter(products, {
+    querySerch,
+    nameSelected,
+  });
 
   return (
     <div className="section">
@@ -61,30 +72,7 @@ export const App = () => {
               onClickChengeName={setNameSelected}
             />
 
-            <div className="panel-block">
-              <p className="control has-icons-left has-icons-right">
-                <input
-                  data-cy="SearchField"
-                  type="text"
-                  className="input"
-                  placeholder="Search"
-                  value="qwe"
-                />
-
-                <span className="icon is-left">
-                  <i className="fas fa-search" aria-hidden="true" />
-                </span>
-
-                <span className="icon is-right">
-                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                  <button
-                    data-cy="ClearButton"
-                    type="button"
-                    className="delete"
-                  />
-                </span>
-              </p>
-            </div>
+            <Serch querySerch={querySerch} onChengeInput={setQuerySerch} />
 
             <div className="panel-block is-flex-wrap-wrap">
               <a
