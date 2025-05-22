@@ -8,6 +8,7 @@ import productsFromServer from './api/products';
 import { Table } from './Table';
 import { PanelUsersName } from './PanelUsersName';
 import { Serch } from './Serch/Serch';
+import { Category } from './Category/Category';
 
 const usersName = usersFromServer.map(user => ({
   id: user.id,
@@ -50,6 +51,7 @@ function productsFilter(elements, filter) {
 
 export const App = () => {
   const [nameSelected, setNameSelected] = useState('All');
+  const [categorySelected, setCategorySelected] = useState('');
   const [querySerch, setQuerySerch] = useState('');
 
   const filteredProducts = productsFilter(products, {
@@ -74,44 +76,20 @@ export const App = () => {
 
             <Serch querySerch={querySerch} onChengeInput={setQuerySerch} />
 
-            <div className="panel-block is-flex-wrap-wrap">
-              <a
-                href="#/"
-                data-cy="AllCategories"
-                className="button is-success mr-6 is-outlined"
-              >
-                All
-              </a>
-
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1 is-info"
-                href="#/"
-              >
-                Category 1
-              </a>
-
-              <a data-cy="Category" className="button mr-2 my-1" href="#/">
-                Category 2
-              </a>
-
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1 is-info"
-                href="#/"
-              >
-                Category 3
-              </a>
-              <a data-cy="Category" className="button mr-2 my-1" href="#/">
-                Category 4
-              </a>
-            </div>
+            <Category
+              categorySelected={categorySelected}
+              onClickCatygory={setCategorySelected}
+            />
 
             <div className="panel-block">
               <a
                 data-cy="ResetAllButton"
                 href="#/"
                 className="button is-link is-outlined is-fullwidth"
+                onClick={() => {
+                  nameSelected();
+                  setCategorySelected();
+                }}
               >
                 Reset all filters
               </a>
